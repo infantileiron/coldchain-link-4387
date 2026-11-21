@@ -9,7 +9,9 @@ from src.middlewares.auth import current,editor,admin
 from src.utils.security import verify,token
 from src.services.business import audit,dump
 from src.controllers.business import ensure_shipment,ensure_study,study_rows
+from src.routes.privacy import router as privacy_router
 router=APIRouter()
+router.include_router(privacy_router)
 @router.post('/auth/login')
 def login(data:Login,s=Depends(db)):
  u=s.query(User).filter_by(email=data.email).first()

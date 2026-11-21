@@ -14,6 +14,14 @@ async def lifespan(app):
    from scripts.seed_demo import seed
    seed()
   except Exception:logging.exception('seed failed')
+ # 初始化各温区预算，并恢复写文件/记账中断的发布单
+ try:
+  from src.config.database import Session
+  from src.services import ledger
+  with Session() as rs:
+   recovered=ledger.recover_pending(rs)
+  if recovered:logging.warning('privacy release recovery: %s',recovered)
+ except Exception:logging.exception('privacy recovery failed')
  yield
 app=FastAPI(title='冷链温控与损耗关联',lifespan=lifespan)
 app.add_middleware(RequestId);app.add_middleware(SecurityHeaders)

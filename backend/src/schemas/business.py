@@ -10,3 +10,9 @@ class StudyInput(BaseModel):
  name:str=Field(min_length=1,max_length=100);zone:Literal['冷藏','冷冻','常温对照'];feature:Literal['exposure','excursions']='exposure'
 class RecommendationInput(BaseModel):
  study_id:int;note:str=Field(min_length=10,max_length=2000);owner:str=Field(min_length=1,max_length=60)
+class ReleaseInput(BaseModel):
+ zone:Literal['冷藏','冷冻','常温对照'];epsilon:float=Field(gt=0,le=10)
+ # 幂等键由前端生成（uuid），同一申请重试复用该键即可获得原结果
+ idempotency_key:str=Field(min_length=8,max_length=80)
+class BudgetInput(BaseModel):
+ zone:Literal['冷藏','冷冻','常温对照'];total_epsilon:float=Field(gt=0,le=1000)
